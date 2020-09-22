@@ -1,6 +1,7 @@
 [
     {
       "slug": "project-1",
+      "date_published": "",
       "thumbnail": "assets/images/article-1.jpeg",
       "thumbnailAltTxt": "Dog Breed",
       "title": "This is the title of article 1.",
@@ -9,6 +10,7 @@
     },
     {
       "slug": "project-2",
+      "date_published": "",
       "thumbnail": "assets/images/article-2.jpeg",
       "thumbnailAltTxt": "Dog Breed",
       "title": "This is the title of article 2.",
@@ -17,6 +19,7 @@
     },
     {
       "slug": "project-3",
+      "date_published": "",
       "thumbnail": "assets/images/article-3.jpeg",
       "thumbnailAltTxt": "Alt Text",
       "title": "This is the title of article 3",

@@ -1,7 +1,11 @@
 package blog_content
 
 import (
+	// "context"
 	"encoding/json"
+	// firebase "firebase.google.com/go"
+	// "firebase.google.com/go/db"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -46,6 +50,23 @@ var (
 	}
 )
 
+// var client *db.Client
+//
+// func init() {
+// 	ctx := context.Background()
+// 	conf := &firebase.Conig{
+// 		DatabaseURL: os.Getenv("FIREBASE_URL")
+// 	}
+// 	app, err := firebase.NewApp(ctx, conf)
+// 	if err != nil {
+// 		log.Fatalf("firebase.NewApp: %v", err)
+// 	}
+// 	client, err = app.Database(ctx)
+// 	if err != nil {
+// 		log.FatalF("app.Firestore: %v", err)
+// 	}
+// }
+
 func HandleContent(w http.ResponseWriter, r *http.Request) {
 	router := mux.NewRouter()
 	for _, route := range routes {
@@ -59,9 +80,10 @@ func HandleContent(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllContent(w http.ResponseWriter, r *http.Request) {
-	jsonFile, err := os.Open("/home/delliott/workspace/gcp_functions/blog_content/data/data.json")
+	jsonFile, err := os.Open("../data/data.json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
 		return
 	}
 	defer jsonFile.Close()
@@ -71,12 +93,14 @@ func getAllContent(w http.ResponseWriter, r *http.Request) {
 
 	if err = json.Unmarshal(byteValue, &posts); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err = json.NewEncoder(w).Encode(posts); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
 		return
 	}
 
@@ -85,9 +109,10 @@ func getAllContent(w http.ResponseWriter, r *http.Request) {
 func getContent(w http.ResponseWriter, r *http.Request) {
 	token := mux.Vars(r)["token"]
 
-	jsonFile, err := os.Open("/home/delliott/workspace/gcp_functions/blog_content/data/data.json")
+	jsonFile, err := os.Open("../data/data.json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
 		return
 	}
 	defer jsonFile.Close()
@@ -97,6 +122,7 @@ func getContent(w http.ResponseWriter, r *http.Request) {
 
 	if err = json.Unmarshal(byteValue, &posts); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Error(err)
 		return
 	}
 	for _, post := range posts {
@@ -105,6 +131,7 @@ func getContent(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			if err = json.NewEncoder(w).Encode(post); err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
+				log.Error(err)
 				return
 			} else {
 				w.WriteHeader(http.StatusNotFound)
